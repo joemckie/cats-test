@@ -1,9 +1,20 @@
-import { Link } from 'react-router-dom';
-import { Routes } from '../../config/routes';
+import styled from 'styled-components';
+import { Page } from '../../components/Page/Page';
+import { UploadedImage } from './components/UploadedImage/UploadedImage';
 
-export const HomePage = () => (
-  <div>
-    <h1>Home</h1>
-    <Link to={Routes.Upload}>Go to upload page</Link>
-  </div>
+const ImageGrid = styled.section`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px);
+  grid-gap: 10px;
+`;
+
+export const HomePage: React.FC = () => (
+  <Page>
+    <h1>Uploaded images</h1>
+    <ImageGrid>
+      {
+        Array(20).fill(null).map(() => <UploadedImage />)
+      }
+    </ImageGrid>
+  </Page>
 );
