@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { GlobalStyle } from './components/GlobalStyles/GlobalStyles';
+import { GlobalStyle } from './components/GlobalStyle/GlobalStyle';
 import { Routes } from './config/routes';
 import { HomePage } from './pages/home/HomePage';
 import { UploadPage } from './pages/upload/UploadPage';

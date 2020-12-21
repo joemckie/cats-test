@@ -8,7 +8,9 @@ interface HeaderProps {
 }
 
 const HeaderInner = styled.div`
+  align-items: center;
   display: flex;
+  flex: 1;
   margin: 0 auto;
   max-width: ${Size.ContainerWidth};
   justify-content: space-between;
@@ -17,6 +19,8 @@ const HeaderInner = styled.div`
 const HeaderLink = styled(Link)`
   color: #ecf0f1;
   text-decoration: none;
+  padding: 1rem;
+  margin: -1rem;
 `;
 
 const HeaderComponent: React.FC<HeaderProps> = ({
@@ -31,10 +35,10 @@ const HeaderComponent: React.FC<HeaderProps> = ({
 );
 
 export const Header = styled(HeaderComponent)`
-  align-self: center;
   background-color: #2c3e50;
   color: #ecf0f1;
+  display: flex;
   grid-area: header;
   height: ${Size.HeaderHeight};
-  padding: 1rem;
+  padding: 0 ${Size.GutterWidth};
 `;

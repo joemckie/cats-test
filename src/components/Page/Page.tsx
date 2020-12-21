@@ -8,6 +8,7 @@ interface PageProps {
 }
 
 const PageInner = styled.div`
+  margin: 1rem 0;
   grid-area: main;
 `;
 
