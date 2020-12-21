@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { GlobalStyle } from './components/GlobalStyle/GlobalStyle';
 import { Routes } from './config/routes';

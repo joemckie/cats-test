@@ -3,8 +3,6 @@ import { normalize } from 'styled-normalize';
 import { Font } from '../../config/typography';
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
-
   ${normalize}
 
   * {
