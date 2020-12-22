@@ -93,7 +93,7 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   images,
   favourites,
   votes,
-  isLoading = false,
+  isLoading,
   onFavourite,
   onUnfavourite,
   onVote,
@@ -122,20 +122,24 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
           const onFavouriteClick = isFavourite ? onUnfavourite : onFavourite;
 
           return (
-            <SingleImageContainer key={image.id} imageURL={image.url}>
-              <FavouriteButton onClick={() => onFavouriteClick(image.id)}>
+            <SingleImageContainer
+              data-testid="cat-upload"
+              key={image.id}
+              imageURL={image.url}
+            >
+              <FavouriteButton data-testid="favourite-button" onClick={() => onFavouriteClick(image.id)}>
                 {
                   isFavourite
-                    ? <Heart />
-                    : <HeartEmpty />
+                    ? <Heart data-testid="favourited" />
+                    : <HeartEmpty data-testid="not-favourited" />
                 }
               </FavouriteButton>
               <VotesContainer>
-                <VoteButton onClick={() => onVote(image.id, -1)}>
+                <VoteButton data-testid="downvote-button" onClick={() => onVote(image.id, -1)}>
                   <DownVote />
                 </VoteButton>
-                <span>{votes[image.id] ?? 0}</span>
-                <VoteButton onClick={() => onVote(image.id, 1)}>
+                <span data-testid="votes-count">{votes[image.id] ?? 0}</span>
+                <VoteButton data-testid="upvote-button" onClick={() => onVote(image.id, 1)}>
                   <UpVote />
                 </VoteButton>
               </VotesContainer>

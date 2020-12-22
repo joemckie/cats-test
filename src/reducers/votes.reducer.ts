@@ -1,6 +1,6 @@
 import { Reducer } from 'react';
 
-interface ImageVote {
+export interface ImageVote {
   value: number;
   image_id: string;
   id: string;
