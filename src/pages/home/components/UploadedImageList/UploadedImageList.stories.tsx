@@ -22,7 +22,9 @@ const Template: Story<UploadedImageListProps> = (args) => (
 export const Primary = Template.bind({});
 Primary.args = {
   images: Array<UploadedImage>(8).fill({
-    imageURL: 'http://placehold.it/264x264',
+    id: '1',
+    width: 1000,
+    url: 'http://placehold.it/264x264',
   }),
 };
 

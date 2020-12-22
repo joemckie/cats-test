@@ -11,11 +11,18 @@ export const HomePage: React.FC = () => {
     async function fetchImages() {
       setIsLoading(true);
 
-      const response = await fetch(`${apiSettings.baseURL}/images`, {
-        headers: {
-          'x-api-key': apiSettings.apiKey,
-        },
+      const queryParams = new URLSearchParams({
+        limit: '100',
       });
+
+      const response = await fetch(
+        `${apiSettings.baseURL}/images?${queryParams}`,
+        {
+          headers: {
+            'x-api-key': apiSettings.apiKey,
+          },
+        },
+      );
       const data = await response.json();
 
       setImages(data);

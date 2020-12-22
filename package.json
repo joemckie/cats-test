@@ -57,6 +57,7 @@
     "react-app-polyfill": "^2.0.0",
     "react-dev-utils": "^11.0.1",
     "react-dom": "^17.0.1",
+    "react-dropzone": "^11.2.4",
     "react-refresh": "^0.8.3",
     "react-router-dom": "^5.2.0",
     "resolve": "1.18.1",
@@ -97,6 +98,7 @@
       "import/prefer-default-export": 0,
       "import/no-default-export": 2,
       "react/prop-types": 0,
+      "react/jsx-props-no-spreading": 0,
       "import/no-extraneous-dependencies": [
         2,
         {
@@ -115,8 +117,7 @@
         ],
         "rules": {
           "import/prefer-default-export": 2,
-          "import/no-default-export": 0,
-          "react/jsx-props-no-spreading": 0
+          "import/no-default-export": 0
         }
       }
     ]

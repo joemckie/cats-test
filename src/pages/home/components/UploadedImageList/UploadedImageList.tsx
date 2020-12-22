@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Routes } from '../../../../config/routes';
+// import heart from './assets/heart.svg';
+import { ReactComponent as HeartEmpty } from './assets/heart-empty.svg';
 
 export interface UploadedImage {
-  imageURL: string;
+  url: string;
+  id: string;
+  width: number;
 }
 
 export interface UploadedImageListProps {
@@ -19,8 +23,29 @@ const ImageGrid = styled.section`
   grid-gap: 10px;
 `;
 
-const SingleImage = styled.div` 
+interface SingleImageContainerProps {
+  imageURL: string;
+}
+
+const SingleImageContainer = styled.div<SingleImageContainerProps>`
+  align-items: flex-end;
+  background-image: url(${({ imageURL }) => imageURL});
+  background-size: cover;
+  background-position: center;
+  display: flex;
   height: 264px;
+  position: relative;
+`;
+
+const FavouriteButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  fill: #e74c3c;
 `;
 
 export const UploadedImageList: React.FC<UploadedImageListProps> = ({
@@ -28,6 +53,9 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   images,
   isLoading = false,
 }) => {
+  const onFavourite = useCallback(() => {}, []);
+  // const onUnfavourite = useCallback(() => {}, []);
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -47,12 +75,14 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   return (
     <ImageGrid className={className}>
       {
-      images.map((image) => (
-        <SingleImage>
-          <img alt="Uploaded cat" src={image.imageURL} />
-        </SingleImage>
-      ))
-    }
+        images.map((image) => (
+          <SingleImageContainer imageURL={image.url}>
+            <FavouriteButton onClick={onFavourite}>
+              <HeartEmpty />
+            </FavouriteButton>
+          </SingleImageContainer>
+        ))
+      }
     </ImageGrid>
   );
 };
