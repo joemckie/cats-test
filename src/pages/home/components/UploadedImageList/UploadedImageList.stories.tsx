@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
-import { UploadedImage, UploadedImageList, UploadedImageListProps } from './UploadedImageList';
+import { UploadedImage } from '../../../../reducers/images.reducer';
+import { UploadedImageList, UploadedImageListProps } from './UploadedImageList';
 
 export default {
   title: 'Components/Uploaded Image List',

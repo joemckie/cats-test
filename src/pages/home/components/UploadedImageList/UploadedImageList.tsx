@@ -1,20 +1,19 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Routes } from '../../../../config/routes';
-// import heart from './assets/heart.svg';
+import { FavouriteImage } from '../../../../reducers/favourites.reducer';
+import { ReactComponent as Heart } from './assets/heart.svg';
 import { ReactComponent as HeartEmpty } from './assets/heart-empty.svg';
-
-export interface UploadedImage {
-  url: string;
-  id: string;
-  width: number;
-}
+import { UploadedImage } from '../../../../reducers/images.reducer';
 
 export interface UploadedImageListProps {
   className?: string;
   images: UploadedImage[];
+  favourites: FavouriteImage[];
   isLoading?: boolean;
+  onFavourite: (imageId: string) => Promise<void>;
+  onUnfavourite: (imageId: string) => Promise<void>;
 }
 
 const ImageGrid = styled.section`
@@ -51,11 +50,11 @@ const FavouriteButton = styled.button`
 export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   className,
   images,
+  favourites,
+  onFavourite,
+  onUnfavourite,
   isLoading = false,
 }) => {
-  const onFavourite = useCallback(() => {}, []);
-  // const onUnfavourite = useCallback(() => {}, []);
-
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -75,13 +74,24 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   return (
     <ImageGrid className={className}>
       {
-        images.map((image) => (
-          <SingleImageContainer imageURL={image.url}>
-            <FavouriteButton onClick={onFavourite}>
-              <HeartEmpty />
-            </FavouriteButton>
-          </SingleImageContainer>
-        ))
+        images.map((image) => {
+          // If we had lots of favourites we could speed this up
+          // by normalising the favourites into a hash map
+          const isFavourite = favourites.some((favourite) => favourite.image_id === image.id);
+          const onFavouriteClick = isFavourite ? onUnfavourite : onFavourite;
+
+          return (
+            <SingleImageContainer key={image.id} imageURL={image.url}>
+              <FavouriteButton onClick={() => onFavouriteClick(image.id)}>
+                {
+                  isFavourite
+                    ? <Heart />
+                    : <HeartEmpty />
+                }
+              </FavouriteButton>
+            </SingleImageContainer>
+          );
+        })
       }
     </ImageGrid>
   );
