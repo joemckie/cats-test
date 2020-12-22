@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDropzone, DropzoneRootProps } from 'react-dropzone';
+import { useToasts } from 'react-toast-notifications';
 import styled from 'styled-components';
 import { apiSettings } from '../../../../config/api';
 import { apiRequest } from '../../../../utils/apiRequest';
@@ -40,23 +41,41 @@ const Container = styled.div`
 `;
 
 export const FileUpload = ({ onImageUpload }: FileUploadProps) => {
+  const { addToast } = useToasts();
+
   const onDrop = useCallback(async ([file]) => {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    formData.append('file', file);
+      formData.append('file', file);
 
-    const response = await apiRequest(
-      `${apiSettings.baseURL}/images/upload`,
-      {
-        method: 'POST',
-        body: formData,
-      },
-    );
+      const response = await apiRequest(
+        `${apiSettings.baseURL}/images/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
 
-    if (response.approved === 1) {
-      onImageUpload();
+      const data = await response.json();
+
+      if (!response.ok) {
+        addToast(data.message, { appearance: 'error' });
+      }
+
+      if (data.approved === 1) {
+        onImageUpload();
+
+        addToast('Image uploaded!', {
+          appearance: 'success',
+        });
+      }
+    } catch (e) {
+      addToast(e.message, {
+        appearance: 'error',
+      });
     }
-  }, [onImageUpload]);
+  }, [onImageUpload, addToast]);
 
   const {
     getRootProps,

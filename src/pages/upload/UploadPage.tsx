@@ -5,6 +5,7 @@ import { FileUpload } from './components/FileUpload/FileUpload';
 
 export const UploadPage = () => {
   const history = useHistory();
+
   const onImageUpload = useCallback(() => {
     history.push('/');
   }, [history]);

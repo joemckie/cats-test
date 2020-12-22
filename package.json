@@ -60,6 +60,7 @@
     "react-dropzone": "^11.2.4",
     "react-refresh": "^0.8.3",
     "react-router-dom": "^5.2.0",
+    "react-toast-notifications": "^2.4.0",
     "resolve": "1.18.1",
     "resolve-url-loader": "^3.1.2",
     "sass-loader": "8.0.2",
@@ -200,6 +201,7 @@
     "@storybook/addon-links": "^6.1.11",
     "@storybook/react": "^6.1.11",
     "@types/react-router-dom": "^5.1.6",
+    "@types/react-toast-notifications": "^2.4.0",
     "@types/styled-components": "^5.1.7",
     "eslint-config-airbnb-typescript": "^12.0.0",
     "msw": "^0.24.2"
