@@ -4,6 +4,7 @@ import {
 } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { ToastProvider } from 'react-toast-notifications';
 import { HomePage } from './HomePage';
 import { rest, server } from '../../test/mocks/server';
 import { apiSettings } from '../../config/api';
@@ -11,10 +12,20 @@ import { UploadedImage } from '../../reducers/images.reducer';
 import { FavouriteImage } from '../../reducers/favourites.reducer';
 import { ImageVote } from '../../reducers/votes.reducer';
 
-it('displays all uploaded images', async () => {
+function renderPage() {
   render(<HomePage />, {
-    wrapper: Router,
+    wrapper: ({ children }) => (
+      <ToastProvider>
+        <Router>
+          {children}
+        </Router>
+      </ToastProvider>
+    ),
   });
+}
+
+it('displays all uploaded images', async () => {
+  renderPage();
 
   expect(screen.queryByText(/Loading/)).toBeInTheDocument();
   expect(await screen.findAllByTestId('cat-upload')).toHaveLength(4);
@@ -26,9 +37,7 @@ it('shows a message if the user has not uploaded any images', async () => {
     rest.get(`${apiSettings.baseURL}/images`, async (_req, res, ctx) => res(ctx.json([]))),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   expect(screen.queryByText(/Loading/)).toBeInTheDocument();
   expect(await screen.findByText(/No images uploaded/)).toBeInTheDocument();
@@ -63,9 +72,7 @@ it("highlights the user's favourites", async () => {
     ),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   expect(await screen.findAllByTestId('favourited')).toHaveLength(1);
   expect(await screen.findAllByTestId('not-favourited')).toHaveLength(1);
@@ -105,9 +112,7 @@ it('shows the correct vote count', async () => {
     ),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   expect(await screen.findByTestId('votes-count')).toHaveTextContent('1');
 });
@@ -134,9 +139,7 @@ it('votes an image up when the upvote button is pressed', async () => {
     ),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   const catUpload = await screen.findByTestId('cat-upload');
 
@@ -169,9 +172,7 @@ it('votes an image down when the downvote button is pressed', async () => {
     ),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   const catUpload = await screen.findByTestId('cat-upload');
 
@@ -204,9 +205,7 @@ it('favourites an image when the favourite button is pressed', async () => {
     ),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   userEvent.click(await screen.findByTestId('favourite-button'));
 
@@ -240,9 +239,7 @@ it('unfavourites an image when the unfavourite button is pressed', async () => {
     ),
   );
 
-  render(<HomePage />, {
-    wrapper: Router,
-  });
+  renderPage();
 
   userEvent.click(await screen.findByTestId('favourite-button'));
 

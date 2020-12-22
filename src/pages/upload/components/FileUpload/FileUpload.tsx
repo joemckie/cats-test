@@ -91,7 +91,7 @@ export const FileUpload = ({ onImageUpload }: FileUploadProps) => {
   return (
     <div className="container">
       <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
-        <input {...getInputProps({ multiple: false })} />
+        <input data-testid="file-upload" {...getInputProps({ multiple: false })} />
         <p>Upload a cat picture</p>
       </Container>
     </div>
