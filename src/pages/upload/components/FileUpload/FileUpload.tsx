@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useDropzone, DropzoneRootProps } from 'react-dropzone';
 import styled from 'styled-components';
 import { apiSettings } from '../../../../config/api';
+import { apiRequest } from '../../../../utils/apiRequest';
 
 interface FileUploadProps {
   onImageUpload: () => void;
@@ -44,18 +45,15 @@ export const FileUpload = ({ onImageUpload }: FileUploadProps) => {
 
     formData.append('file', file);
 
-    const response = await fetch(
+    const response = await apiRequest(
       `${apiSettings.baseURL}/images/upload`,
       {
         method: 'POST',
-        headers: {
-          'x-api-key': apiSettings.apiKey,
-        },
         body: formData,
       },
     );
 
-    if (response.ok) {
+    if (response.approved === 1) {
       onImageUpload();
     }
   }, [onImageUpload]);

@@ -5,6 +5,8 @@ import { Page } from '../../components/Page/Page';
 import { apiSettings } from '../../config/api';
 import { favouritesInitialState, favouritesReducer } from '../../reducers/favourites.reducer';
 import { imagesInitialState, imagesReducer } from '../../reducers/images.reducer';
+import { votesInitialState, votesReducer } from '../../reducers/votes.reducer';
+import { apiRequest } from '../../utils/apiRequest';
 import { UploadedImageList } from './components/UploadedImageList/UploadedImageList';
 
 export const HomePage: React.FC = () => {
@@ -14,20 +16,53 @@ export const HomePage: React.FC = () => {
     favouritesInitialState,
   );
   const [{ images }, dispatchImages] = useReducer(imagesReducer, imagesInitialState);
+  const [{ votes }, dispatchVotes] = useReducer(votesReducer, votesInitialState);
+
+  useEffect(() => {
+    async function fetchPageData() {
+      const imagesData = await apiRequest(
+        `${apiSettings.baseURL}/images?limit=100`,
+      );
+
+      const favouritesData = await apiRequest(
+        `${apiSettings.baseURL}/favourites?limit=100`,
+      );
+
+      const votesData = await apiRequest(
+        `${apiSettings.baseURL}/votes?limit=100`,
+      );
+
+      dispatchImages({
+        type: 'SET_IMAGES',
+        payload: imagesData,
+      });
+
+      dispatchFavourites({
+        type: 'SET_FAVOURITES',
+        payload: favouritesData,
+      });
+
+      dispatchVotes({
+        type: 'SET_VOTES',
+        payload: votesData,
+      });
+
+      setIsLoading(false);
+    }
+
+    fetchPageData();
+  }, []);
 
   const onFavouriteImage = useCallback(async (imageId) => {
-    const response = await fetch(`${apiSettings.baseURL}/favourites`, {
+    const favourite = await apiRequest(`${apiSettings.baseURL}/favourites`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiSettings.apiKey,
       },
       body: JSON.stringify({
         image_id: imageId,
       }),
     });
-
-    const favourite = await response.json();
 
     dispatchFavourites({
       type: 'ADD_FAVOURITE',
@@ -45,21 +80,17 @@ export const HomePage: React.FC = () => {
       return;
     }
 
-    const response = await fetch(
+    const response = await apiRequest(
       `${apiSettings.baseURL}/favourites/${favourite.id}`,
       {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiSettings.apiKey,
-        },
         body: JSON.stringify({
           image_id: imageId,
         }),
       },
     );
 
-    if (response.ok) {
+    if (response.message === 'SUCCESS') {
       dispatchFavourites({
         type: 'REMOVE_FAVOURITE',
         payload: {
@@ -69,43 +100,28 @@ export const HomePage: React.FC = () => {
     }
   }, [favourites]);
 
-  useEffect(() => {
-    async function fetchPageData() {
-      const imagesResponse = await fetch(
-        `${apiSettings.baseURL}/images?limit=100`,
-        {
-          headers: {
-            'x-api-key': apiSettings.apiKey,
-          },
+  const onVote = useCallback(async (imageId: string, value: 1 | -1) => {
+    await apiRequest(
+      `${apiSettings.baseURL}/votes`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          image_id: imageId,
+          value,
+        }),
+      },
+    );
 
-      const favouritesResponse = await fetch(
-        `${apiSettings.baseURL}/favourites?limit=100`,
-        {
-          headers: {
-            'x-api-key': apiSettings.apiKey,
-          },
-        },
-      );
-
-      const imagesData = await imagesResponse.json();
-      const favouritesData = await favouritesResponse.json();
-
-      dispatchImages({
-        type: 'SET_IMAGES',
-        payload: imagesData,
-      });
-
-      dispatchFavourites({
-        type: 'SET_FAVOURITES',
-        payload: favouritesData,
-      });
-
-      setIsLoading(false);
-    }
-
-    fetchPageData();
+    dispatchVotes({
+      type: 'VOTE',
+      payload: {
+        imageId,
+        value,
+      },
+    });
   }, []);
 
   return (
@@ -115,8 +131,10 @@ export const HomePage: React.FC = () => {
         isLoading={isLoading}
         images={images}
         favourites={favourites}
+        votes={votes}
         onFavourite={onFavouriteImage}
         onUnfavourite={onUnfavouriteImage}
+        onVote={onVote}
       />
     </Page>
   );

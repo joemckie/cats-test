@@ -5,15 +5,19 @@ import { Routes } from '../../../../config/routes';
 import { FavouriteImage } from '../../../../reducers/favourites.reducer';
 import { ReactComponent as Heart } from './assets/heart.svg';
 import { ReactComponent as HeartEmpty } from './assets/heart-empty.svg';
+import { ReactComponent as Arrow } from './assets/arrow.svg';
 import { UploadedImage } from '../../../../reducers/images.reducer';
+import { NormalisedVotes } from '../../../../reducers/votes.reducer';
 
 export interface UploadedImageListProps {
   className?: string;
   images: UploadedImage[];
   favourites: FavouriteImage[];
+  votes: NormalisedVotes;
   isLoading?: boolean;
   onFavourite: (imageId: string) => Promise<void>;
   onUnfavourite: (imageId: string) => Promise<void>;
+  onVote: (imageId: string, value: 1 | -1) => Promise<void>;
 }
 
 const ImageGrid = styled.section`
@@ -47,13 +51,52 @@ const FavouriteButton = styled.button`
   fill: #e74c3c;
 `;
 
+const VotesContainer = styled.div`
+  align-items: center;
+  background: rgba(44, 62, 80, 0.5);
+  color: #ecf0f1;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  padding: 0.5rem;
+`;
+
+const VoteButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  line-height: 1;
+  padding: 0;
+`;
+
+const StyledArrow = styled(Arrow)`
+  opacity: 0.75;
+  transition: opacity .1s;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const DownVote = styled(StyledArrow)`
+  fill: #8cb3d9;
+`;
+
+const UpVote = styled(StyledArrow)`
+  fill: #ff4500;
+  transform: rotate(180deg);
+`;
+
 export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   className,
   images,
   favourites,
+  votes,
+  isLoading = false,
   onFavourite,
   onUnfavourite,
-  isLoading = false,
+  onVote,
 }) => {
   if (isLoading) {
     return <p>Loading...</p>;
@@ -75,8 +118,6 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
     <ImageGrid className={className}>
       {
         images.map((image) => {
-          // If we had lots of favourites we could speed this up
-          // by normalising the favourites into a hash map
           const isFavourite = favourites.some((favourite) => favourite.image_id === image.id);
           const onFavouriteClick = isFavourite ? onUnfavourite : onFavourite;
 
@@ -89,6 +130,15 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
                     : <HeartEmpty />
                 }
               </FavouriteButton>
+              <VotesContainer>
+                <VoteButton onClick={() => onVote(image.id, -1)}>
+                  <DownVote />
+                </VoteButton>
+                <span>{votes[image.id] ?? 0}</span>
+                <VoteButton onClick={() => onVote(image.id, 1)}>
+                  <UpVote />
+                </VoteButton>
+              </VotesContainer>
             </SingleImageContainer>
           );
         })
