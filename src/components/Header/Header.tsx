@@ -24,9 +24,7 @@ const HeaderLink = styled(Link)`
   margin: -1rem;
 `;
 
-const HeaderComponent: React.FC<HeaderProps> = ({
-  className,
-}) => (
+const HeaderComponent: React.FC<HeaderProps> = ({ className }) => (
   <header className={className}>
     <HeaderInner>
       <HeaderLink to={Routes.Home}>Home</HeaderLink>

@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useContext, useEffect, useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { Page } from '../../components/Page/Page';
 import { apiSettings } from '../../config/api';
@@ -11,11 +9,7 @@ import { UploadedImageList } from './components/UploadedImageList/UploadedImageL
 export const HomePage: React.FC = () => {
   const { addToast } = useToasts();
   const {
-    state: {
-      favourites,
-      images,
-      votes,
-    },
+    state: { favourites, images, votes },
     dispatch,
   } = useContext(store);
   const [isLoading, setIsLoading] = useState(images.allImages.length === 0);
@@ -63,69 +57,76 @@ export const HomePage: React.FC = () => {
     }
   }, [addToast, dispatch, isLoading]);
 
-  const onFavouriteImage = useCallback(async (imageId) => {
-    try {
-      const response = await apiRequest(`${apiSettings.baseURL}/favourites`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image_id: imageId,
-        }),
-      });
-
-      const favourite = await response.json();
-
-      dispatch({
-        type: 'ADD_FAVOURITE',
-        payload: {
-          image_id: imageId,
-          id: favourite.id,
-        },
-      });
-    } catch (e) {
-      addToast('Unable to favourite image', {
-        appearance: 'error',
-      });
-    }
-  }, [addToast, dispatch]);
-
-  const onUnfavouriteImage = useCallback(async (imageId) => {
-    try {
-      const favourite = favourites.allFavourites.find(({ image_id }) => image_id === imageId);
-
-      const response = await apiRequest(
-        `${apiSettings.baseURL}/favourites/${favourite!.id}`,
-        {
-          method: 'DELETE',
+  const onFavouriteImage = useCallback(
+    async (imageId) => {
+      try {
+        const response = await apiRequest(`${apiSettings.baseURL}/favourites`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             image_id: imageId,
           }),
-        },
-      );
+        });
 
-      const data = await response.json();
+        const favourite = await response.json();
 
-      if (data.message === 'SUCCESS') {
         dispatch({
-          type: 'REMOVE_FAVOURITE',
+          type: 'ADD_FAVOURITE',
           payload: {
-            id: favourite!.id,
+            image_id: imageId,
+            id: favourite.id,
           },
         });
+      } catch (e) {
+        addToast('Unable to favourite image', {
+          appearance: 'error',
+        });
       }
-    } catch (e) {
-      addToast(e.message, {
-        appearance: 'error',
-      });
-    }
-  }, [favourites, addToast, dispatch]);
+    },
+    [addToast, dispatch],
+  );
 
-  const onVote = useCallback(async (imageId: string, value: 1 | -1) => {
-    const response = await apiRequest(
-      `${apiSettings.baseURL}/votes`,
-      {
+  const onUnfavouriteImage = useCallback(
+    async (imageId) => {
+      try {
+        const favourite = favourites.allFavourites.find(
+          ({ image_id }) => image_id === imageId,
+        );
+
+        const response = await apiRequest(
+          `${apiSettings.baseURL}/favourites/${favourite!.id}`,
+          {
+            method: 'DELETE',
+            body: JSON.stringify({
+              image_id: imageId,
+            }),
+          },
+        );
+
+        const data = await response.json();
+
+        if (data.message === 'SUCCESS') {
+          dispatch({
+            type: 'REMOVE_FAVOURITE',
+            payload: {
+              id: favourite!.id,
+            },
+          });
+        }
+      } catch (e) {
+        addToast(e.message, {
+          appearance: 'error',
+        });
+      }
+    },
+    [favourites, addToast, dispatch],
+  );
+
+  const onVote = useCallback(
+    async (imageId: string, value: 1 | -1) => {
+      const response = await apiRequest(`${apiSettings.baseURL}/votes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,27 +135,28 @@ export const HomePage: React.FC = () => {
           image_id: imageId,
           value,
         }),
-      },
-    );
+      });
 
-    if (response.ok) {
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
 
-      if (data.message === 'SUCCESS') {
-        dispatch({
-          type: 'VOTE',
-          payload: {
-            imageId,
-            value,
-          },
+        if (data.message === 'SUCCESS') {
+          dispatch({
+            type: 'VOTE',
+            payload: {
+              imageId,
+              value,
+            },
+          });
+        }
+      } else {
+        addToast('Unable to vote', {
+          appearance: 'error',
         });
       }
-    } else {
-      addToast('Unable to vote', {
-        appearance: 'error',
-      });
-    }
-  }, [addToast, dispatch]);
+    },
+    [addToast, dispatch],
+  );
 
   return (
     <Page>

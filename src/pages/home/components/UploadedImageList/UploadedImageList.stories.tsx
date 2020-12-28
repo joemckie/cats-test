@@ -10,10 +10,11 @@ export default {
 
 const Template: Story<UploadedImageListProps> = (args) => (
   <BrowserRouter>
-    <div style={{
-      margin: '0 auto',
-      maxWidth: '1100px',
-    }}
+    <div
+      style={{
+        margin: '0 auto',
+        maxWidth: '1100px',
+      }}
     >
       <UploadedImageList {...args} />
     </div>

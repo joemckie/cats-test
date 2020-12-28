@@ -83,18 +83,29 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "lint": "eslint src --ext .ts,.tsx --ignore-pattern *.d.ts"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest",
-      "airbnb-typescript"
+      "airbnb-typescript",
+      "plugin:prettier/recommended",
+      "prettier/react"
+    ],
+    "plugins": [
+      "prettier"
     ],
     "parserOptions": {
       "project": "./tsconfig.json"
     },
     "rules": {
+      "@typescript-eslint/indent": 0,
       "react/react-in-jsx-scope": 0,
       "import/prefer-default-export": 0,
       "import/no-default-export": 2,
@@ -204,6 +215,8 @@
     "@types/react-toast-notifications": "^2.4.0",
     "@types/styled-components": "^5.1.7",
     "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.0",
     "msw": "^0.24.2"
   }
 }

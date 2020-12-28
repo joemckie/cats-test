@@ -21,7 +21,10 @@ export const imagesInitialState: ImagesReducerState = {
   allImages: [],
 };
 
-export const imagesReducer: Reducer<ImagesReducerState, ImagesReducerAction> = (state, action) => {
+export const imagesReducer: Reducer<ImagesReducerState, ImagesReducerAction> = (
+  state,
+  action,
+) => {
   switch (action.type) {
     case 'SET_IMAGES':
       return {
@@ -31,11 +34,9 @@ export const imagesReducer: Reducer<ImagesReducerState, ImagesReducerAction> = (
     case 'FINALISE_UPLOAD':
       return {
         ...state,
-        allImages: [
-          action.payload,
-          ...state.allImages,
-        ],
+        allImages: [action.payload, ...state.allImages],
       };
-    default: return state;
+    default:
+      return state;
   }
 };

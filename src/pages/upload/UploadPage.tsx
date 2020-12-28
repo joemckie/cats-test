@@ -9,14 +9,17 @@ export const UploadPage = () => {
   const history = useHistory();
   const { dispatch } = useContext(store);
 
-  const onImageUpload = useCallback((uploadedImage: UploadedImage) => {
-    history.push('/');
+  const onImageUpload = useCallback(
+    (uploadedImage: UploadedImage) => {
+      history.push('/');
 
-    dispatch({
-      type: 'FINALISE_UPLOAD',
-      payload: uploadedImage,
-    });
-  }, [dispatch, history]);
+      dispatch({
+        type: 'FINALISE_UPLOAD',
+        payload: uploadedImage,
+      });
+    },
+    [dispatch, history],
+  );
 
   return (
     <Page>

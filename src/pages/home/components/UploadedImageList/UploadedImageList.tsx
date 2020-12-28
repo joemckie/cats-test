@@ -72,7 +72,7 @@ const VoteButton = styled.button`
 
 const StyledArrow = styled(Arrow)`
   opacity: 0.75;
-  transition: opacity .1s;
+  transition: opacity 0.1s;
 
   &:hover {
     opacity: 1;
@@ -105,48 +105,54 @@ export const UploadedImageList: React.FC<UploadedImageListProps> = ({
   if (!images.length) {
     return (
       <p>
-        No images uploaded.
-        {' '}
-        <Link to={Routes.Upload}>Click here</Link>
-        {' '}
-        to upload some!
+        No images uploaded. <Link to={Routes.Upload}>Click here</Link> to upload
+        some!
       </p>
     );
   }
 
   return (
     <ImageGrid className={className}>
-      {
-        images.map((image) => {
-          const isFavourite = favourites.some((favourite) => favourite.image_id === image.id);
-          const onFavouriteClick = isFavourite ? onUnfavourite : onFavourite;
+      {images.map((image) => {
+        const isFavourite = favourites.some(
+          (favourite) => favourite.image_id === image.id,
+        );
+        const onFavouriteClick = isFavourite ? onUnfavourite : onFavourite;
 
-          return (
-            <SingleImageContainer
-              data-testid="cat-upload"
-              key={image.id}
-              imageURL={image.url}
+        return (
+          <SingleImageContainer
+            data-testid="cat-upload"
+            key={image.id}
+            imageURL={image.url}
+          >
+            <FavouriteButton
+              data-testid="favourite-button"
+              onClick={() => onFavouriteClick(image.id)}
             >
-              <FavouriteButton data-testid="favourite-button" onClick={() => onFavouriteClick(image.id)}>
-                {
-                  isFavourite
-                    ? <Heart data-testid="favourited" />
-                    : <HeartEmpty data-testid="not-favourited" />
-                }
-              </FavouriteButton>
-              <VotesContainer>
-                <VoteButton data-testid="downvote-button" onClick={() => onVote(image.id, -1)}>
-                  <DownVote />
-                </VoteButton>
-                <span data-testid="votes-count">{votes[image.id] ?? 0}</span>
-                <VoteButton data-testid="upvote-button" onClick={() => onVote(image.id, 1)}>
-                  <UpVote />
-                </VoteButton>
-              </VotesContainer>
-            </SingleImageContainer>
-          );
-        })
-      }
+              {isFavourite ? (
+                <Heart data-testid="favourited" />
+              ) : (
+                <HeartEmpty data-testid="not-favourited" />
+              )}
+            </FavouriteButton>
+            <VotesContainer>
+              <VoteButton
+                data-testid="downvote-button"
+                onClick={() => onVote(image.id, -1)}
+              >
+                <DownVote />
+              </VoteButton>
+              <span data-testid="votes-count">{votes[image.id] ?? 0}</span>
+              <VoteButton
+                data-testid="upvote-button"
+                onClick={() => onVote(image.id, 1)}
+              >
+                <UpVote />
+              </VoteButton>
+            </VotesContainer>
+          </SingleImageContainer>
+        );
+      })}
     </ImageGrid>
   );
 };

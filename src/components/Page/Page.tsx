@@ -13,10 +13,7 @@ const PageInner = styled.div`
   grid-area: main;
 `;
 
-const PageComponent: React.FC<PageProps> = ({
-  children,
-  className,
-}) => (
+const PageComponent: React.FC<PageProps> = ({ children, className }) => (
   <main className={className}>
     <Header />
     <PageInner>{children}</PageInner>
@@ -26,9 +23,10 @@ const PageComponent: React.FC<PageProps> = ({
 
 export const Page = styled(PageComponent)`
   display: grid;
-  grid-template: "header header header"
-                 ". main ."
-                 "footer footer footer";
+  grid-template:
+    'header header header'
+    '. main .'
+    'footer footer footer';
   grid-template-rows: ${Size.HeaderHeight} 1fr ${Size.FooterHeight};
   grid-template-columns:
     minmax(${Size.GutterWidth}, auto)

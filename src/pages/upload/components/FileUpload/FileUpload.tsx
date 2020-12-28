@@ -37,46 +37,49 @@ const Container = styled.div`
   background-color: #fafafa;
   color: #bdbdbd;
   outline: none;
-  transition: border .24s ease-in-out;
+  transition: border 0.24s ease-in-out;
   margin-bottom: 1rem;
 `;
 
 export const FileUpload = ({ onImageUpload }: FileUploadProps) => {
   const { addToast } = useToasts();
 
-  const onDrop = useCallback(async ([file]) => {
-    try {
-      const formData = new FormData();
+  const onDrop = useCallback(
+    async ([file]) => {
+      try {
+        const formData = new FormData();
 
-      formData.append('file', file);
+        formData.append('file', file);
 
-      const response = await apiRequest(
-        `${apiSettings.baseURL}/images/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
+        const response = await apiRequest(
+          `${apiSettings.baseURL}/images/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!response.ok) {
-        addToast(data.message, { appearance: 'error' });
-      }
+        if (!response.ok) {
+          addToast(data.message, { appearance: 'error' });
+        }
 
-      if (data.approved === 1) {
-        onImageUpload(data);
+        if (data.approved === 1) {
+          onImageUpload(data);
 
-        addToast('Image uploaded!', {
-          appearance: 'success',
+          addToast('Image uploaded!', {
+            appearance: 'success',
+          });
+        }
+      } catch (e) {
+        addToast(e.message, {
+          appearance: 'error',
         });
       }
-    } catch (e) {
-      addToast(e.message, {
-        appearance: 'error',
-      });
-    }
-  }, [onImageUpload, addToast]);
+    },
+    [onImageUpload, addToast],
+  );
 
   const {
     getRootProps,
@@ -91,8 +94,13 @@ export const FileUpload = ({ onImageUpload }: FileUploadProps) => {
 
   return (
     <div className="container">
-      <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
-        <input data-testid="file-upload" {...getInputProps({ multiple: false })} />
+      <Container
+        {...getRootProps({ isDragActive, isDragAccept, isDragReject })}
+      >
+        <input
+          data-testid="file-upload"
+          {...getInputProps({ multiple: false })}
+        />
         <p>Upload a cat picture</p>
       </Container>
     </div>

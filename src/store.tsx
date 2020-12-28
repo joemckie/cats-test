@@ -1,7 +1,19 @@
 import React, { Reducer, useReducer } from 'react';
-import { favouritesInitialState, favouritesReducer, FavouritesReducerAction } from './reducers/favourites.reducer';
-import { imagesInitialState, imagesReducer, ImagesReducerAction } from './reducers/images.reducer';
-import { votesInitialState, votesReducer, VotesReducerAction } from './reducers/votes.reducer';
+import {
+  favouritesInitialState,
+  favouritesReducer,
+  FavouritesReducerAction,
+} from './reducers/favourites.reducer';
+import {
+  imagesInitialState,
+  imagesReducer,
+  ImagesReducerAction,
+} from './reducers/images.reducer';
+import {
+  votesInitialState,
+  votesReducer,
+  VotesReducerAction,
+} from './reducers/votes.reducer';
 
 const initialState = {
   favourites: favouritesInitialState,
@@ -9,16 +21,22 @@ const initialState = {
   votes: votesInitialState,
 };
 
-// eslint-disable-next-line max-len
-const combineReducers = (slices: Record<string, Reducer<any, any>>) => (prevState: any, action: any) => Object.keys(slices).reduce(
-  (nextState, nextProp) => ({
-    ...nextState,
-    [nextProp]: slices[nextProp](prevState[nextProp], action),
-  }),
-  prevState,
-);
+const combineReducers = (slices: Record<string, Reducer<any, any>>) => (
+  prevState: any,
+  action: any,
+) =>
+  Object.keys(slices).reduce(
+    (nextState, nextProp) => ({
+      ...nextState,
+      [nextProp]: slices[nextProp](prevState[nextProp], action),
+    }),
+    prevState,
+  );
 
-type Action = VotesReducerAction | FavouritesReducerAction | ImagesReducerAction;
+type Action =
+  | VotesReducerAction
+  | FavouritesReducerAction
+  | ImagesReducerAction;
 
 interface StoreContext {
   state: typeof initialState;
@@ -40,8 +58,6 @@ export const StoreProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(combinedReducers, initialState);
 
   return (
-    <store.Provider value={{ state, dispatch }}>
-      {children}
-    </store.Provider>
+    <store.Provider value={{ state, dispatch }}>{children}</store.Provider>
   );
 };

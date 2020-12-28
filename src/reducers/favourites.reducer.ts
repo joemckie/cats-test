@@ -9,7 +9,10 @@ export interface FavouriteReducerState {
   allFavourites: FavouriteImage[];
 }
 
-type FavouritesActionType = 'SET_FAVOURITES' | 'ADD_FAVOURITE' | 'REMOVE_FAVOURITE';
+type FavouritesActionType =
+  | 'SET_FAVOURITES'
+  | 'ADD_FAVOURITE'
+  | 'REMOVE_FAVOURITE';
 
 export interface FavouritesReducerAction {
   type: FavouritesActionType;
@@ -20,10 +23,10 @@ export const favouritesInitialState: FavouriteReducerState = {
   allFavourites: [],
 };
 
-export const favouritesReducer: Reducer<FavouriteReducerState, FavouritesReducerAction> = (
-  state,
-  action,
-): FavouriteReducerState => {
+export const favouritesReducer: Reducer<
+  FavouriteReducerState,
+  FavouritesReducerAction
+> = (state, action): FavouriteReducerState => {
   switch (action.type) {
     case 'SET_FAVOURITES':
       return {
@@ -36,7 +39,9 @@ export const favouritesReducer: Reducer<FavouriteReducerState, FavouritesReducer
         allFavourites: state.allFavourites.concat(action.payload),
       };
     case 'REMOVE_FAVOURITE': {
-      const index = state.allFavourites.findIndex(({ id }) => id === action.payload.id);
+      const index = state.allFavourites.findIndex(
+        ({ id }) => id === action.payload.id,
+      );
 
       return {
         ...state,
@@ -46,6 +51,7 @@ export const favouritesReducer: Reducer<FavouriteReducerState, FavouritesReducer
         ],
       };
     }
-    default: return state;
+    default:
+      return state;
   }
 };

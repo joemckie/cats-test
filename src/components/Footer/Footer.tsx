@@ -11,9 +11,7 @@ const FooterInner = styled.div`
   max-width: ${Size.ContainerWidth};
 `;
 
-const FooterComponent: React.FC<FooterProps> = ({
-  className,
-}) => (
+const FooterComponent: React.FC<FooterProps> = ({ className }) => (
   <footer className={className}>
     <FooterInner>Created by Joe McKie</FooterInner>
   </footer>

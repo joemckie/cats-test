@@ -25,7 +25,10 @@ export const votesInitialState: VotesReducerState = {
   normalisedVotes: {},
 };
 
-export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (state, action) => {
+export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (
+  state,
+  action,
+) => {
   switch (action.type) {
     case 'SET_VOTES': {
       // Convert vote list to a hash map for O(1) data access
@@ -33,7 +36,8 @@ export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (sta
         (acc: NormalisedVotes, vote: ImageVote) => ({
           ...acc,
           [vote.image_id]: (acc[vote.image_id] ?? 0) + vote.value,
-        }), {},
+        }),
+        {},
       );
 
       return {
@@ -52,6 +56,7 @@ export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (sta
         },
       };
     }
-    default: return state;
+    default:
+      return state;
   }
 };
