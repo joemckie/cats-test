@@ -10,7 +10,6 @@ import { UploadedImageList } from './components/UploadedImageList/UploadedImageL
 
 export const HomePage: React.FC = () => {
   const { addToast } = useToasts();
-  const [isLoading, setIsLoading] = useState(true);
   const {
     state: {
       favourites,
@@ -19,6 +18,7 @@ export const HomePage: React.FC = () => {
     },
     dispatch,
   } = useContext(store);
+  const [isLoading, setIsLoading] = useState(images.allImages.length === 0);
 
   useEffect(() => {
     async function fetchPageData() {
@@ -58,8 +58,10 @@ export const HomePage: React.FC = () => {
       }
     }
 
-    fetchPageData();
-  }, [addToast, dispatch]);
+    if (isLoading) {
+      fetchPageData();
+    }
+  }, [addToast, dispatch, isLoading]);
 
   const onFavouriteImage = useCallback(async (imageId) => {
     try {

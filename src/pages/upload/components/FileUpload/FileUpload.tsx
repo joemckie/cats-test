@@ -3,10 +3,11 @@ import { useDropzone, DropzoneRootProps } from 'react-dropzone';
 import { useToasts } from 'react-toast-notifications';
 import styled from 'styled-components';
 import { apiSettings } from '../../../../config/api';
+import { UploadedImage } from '../../../../reducers/images.reducer';
 import { apiRequest } from '../../../../utils/apiRequest';
 
 interface FileUploadProps {
-  onImageUpload: () => void;
+  onImageUpload: (image: UploadedImage) => void;
 }
 
 const getColor = (props: DropzoneRootProps) => {
@@ -64,7 +65,7 @@ export const FileUpload = ({ onImageUpload }: FileUploadProps) => {
       }
 
       if (data.approved === 1) {
-        onImageUpload();
+        onImageUpload(data);
 
         addToast('Image uploaded!', {
           appearance: 'success',

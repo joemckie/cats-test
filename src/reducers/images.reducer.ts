@@ -10,7 +10,7 @@ interface ImagesReducerState {
   allImages: UploadedImage[];
 }
 
-type ImagesActionType = 'SET_IMAGES';
+type ImagesActionType = 'SET_IMAGES' | 'FINALISE_UPLOAD';
 
 export interface ImagesReducerAction {
   type: ImagesActionType;
@@ -27,6 +27,14 @@ export const imagesReducer: Reducer<ImagesReducerState, ImagesReducerAction> = (
       return {
         ...state,
         allImages: action.payload,
+      };
+    case 'FINALISE_UPLOAD':
+      return {
+        ...state,
+        allImages: [
+          action.payload,
+          ...state.allImages,
+        ],
       };
     default: return state;
   }

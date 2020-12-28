@@ -9,7 +9,7 @@ import { StoreProvider } from './store';
 
 export const App = () => (
   <StoreProvider>
-    <ToastProvider placement="bottom-right">
+    <ToastProvider autoDismiss placement="bottom-right">
       <Router>
         <GlobalStyle />
         <Switch>
