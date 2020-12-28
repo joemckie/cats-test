@@ -11,15 +11,18 @@ import { apiSettings } from '../../config/api';
 import { UploadedImage } from '../../reducers/images.reducer';
 import { FavouriteImage } from '../../reducers/favourites.reducer';
 import { ImageVote } from '../../reducers/votes.reducer';
+import { StoreProvider } from '../../store';
 
 function renderPage() {
   render(<HomePage />, {
     wrapper: ({ children }) => (
-      <ToastProvider>
-        <Router>
-          {children}
-        </Router>
-      </ToastProvider>
+      <StoreProvider>
+        <ToastProvider>
+          <Router>
+            {children}
+          </Router>
+        </ToastProvider>
+      </StoreProvider>
     ),
   });
 }

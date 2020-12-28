@@ -5,47 +5,47 @@ export interface FavouriteImage {
   image_id: string;
 }
 
-interface FavouriteReducerState {
-  favourites: FavouriteImage[];
+export interface FavouriteReducerState {
+  allFavourites: FavouriteImage[];
 }
 
-type HomeActionType = 'SET_FAVOURITES' | 'ADD_FAVOURITE' | 'REMOVE_FAVOURITE';
+type FavouritesActionType = 'SET_FAVOURITES' | 'ADD_FAVOURITE' | 'REMOVE_FAVOURITE';
 
-interface HomeReducerAction {
-  type: HomeActionType;
+export interface FavouritesReducerAction {
+  type: FavouritesActionType;
   payload: any;
 }
 
 export const favouritesInitialState: FavouriteReducerState = {
-  favourites: [],
+  allFavourites: [],
 };
 
-export const favouritesReducer: Reducer<FavouriteReducerState, HomeReducerAction> = (
+export const favouritesReducer: Reducer<FavouriteReducerState, FavouritesReducerAction> = (
   state,
   action,
-) => {
+): FavouriteReducerState => {
   switch (action.type) {
     case 'SET_FAVOURITES':
       return {
         ...state,
-        favourites: action.payload,
+        allFavourites: action.payload,
       };
     case 'ADD_FAVOURITE':
       return {
         ...state,
-        favourites: state.favourites.concat(action.payload),
+        allFavourites: state.allFavourites.concat(action.payload),
       };
     case 'REMOVE_FAVOURITE': {
-      const index = state.favourites.findIndex(({ id }) => id === action.payload.id);
+      const index = state.allFavourites.findIndex(({ id }) => id === action.payload.id);
 
       return {
         ...state,
-        favourites: [
-          ...state.favourites.slice(0, index),
-          ...state.favourites.slice(index + 1),
+        allFavourites: [
+          ...state.allFavourites.slice(0, index),
+          ...state.allFavourites.slice(index + 1),
         ],
       };
     }
-    default: throw new Error();
+    default: return state;
   }
 };

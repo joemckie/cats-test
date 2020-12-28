@@ -11,18 +11,18 @@ export type NormalisedVotes = {
 };
 
 interface VotesReducerState {
-  votes: NormalisedVotes;
+  normalisedVotes: NormalisedVotes;
 }
 
 type VotesActionType = 'SET_VOTES' | 'VOTE';
 
-interface VotesReducerAction {
+export interface VotesReducerAction {
   type: VotesActionType;
   payload: any;
 }
 
 export const votesInitialState: VotesReducerState = {
-  votes: {},
+  normalisedVotes: {},
 };
 
 export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (state, action) => {
@@ -38,7 +38,7 @@ export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (sta
 
       return {
         ...state,
-        votes: normalisedVotes,
+        normalisedVotes,
       };
     }
     case 'VOTE': {
@@ -46,12 +46,12 @@ export const votesReducer: Reducer<VotesReducerState, VotesReducerAction> = (sta
 
       return {
         ...state,
-        votes: {
-          ...state.votes,
-          [imageId]: (state.votes[imageId] ?? 0) + value,
+        normalisedVotes: {
+          ...state.normalisedVotes,
+          [imageId]: (state.normalisedVotes[imageId] ?? 0) + value,
         },
       };
     }
-    default: throw new Error();
+    default: return state;
   }
 };

@@ -7,18 +7,18 @@ export interface UploadedImage {
 }
 
 interface ImagesReducerState {
-  images: UploadedImage[];
+  allImages: UploadedImage[];
 }
 
 type ImagesActionType = 'SET_IMAGES';
 
-interface ImagesReducerAction {
+export interface ImagesReducerAction {
   type: ImagesActionType;
   payload: any;
 }
 
 export const imagesInitialState: ImagesReducerState = {
-  images: [],
+  allImages: [],
 };
 
 export const imagesReducer: Reducer<ImagesReducerState, ImagesReducerAction> = (state, action) => {
@@ -26,8 +26,8 @@ export const imagesReducer: Reducer<ImagesReducerState, ImagesReducerAction> = (
     case 'SET_IMAGES':
       return {
         ...state,
-        images: action.payload,
+        allImages: action.payload,
       };
-    default: throw new Error();
+    default: return state;
   }
 };

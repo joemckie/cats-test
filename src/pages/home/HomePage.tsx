@@ -1,24 +1,24 @@
 import React, {
-  useCallback, useEffect, useReducer, useState,
+  useCallback, useContext, useEffect, useState,
 } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { Page } from '../../components/Page/Page';
 import { apiSettings } from '../../config/api';
-import { favouritesInitialState, favouritesReducer } from '../../reducers/favourites.reducer';
-import { imagesInitialState, imagesReducer } from '../../reducers/images.reducer';
-import { votesInitialState, votesReducer } from '../../reducers/votes.reducer';
+import { store } from '../../store';
 import { apiRequest } from '../../utils/apiRequest';
 import { UploadedImageList } from './components/UploadedImageList/UploadedImageList';
 
 export const HomePage: React.FC = () => {
   const { addToast } = useToasts();
   const [isLoading, setIsLoading] = useState(true);
-  const [{ favourites }, dispatchFavourites] = useReducer(
-    favouritesReducer,
-    favouritesInitialState,
-  );
-  const [{ images }, dispatchImages] = useReducer(imagesReducer, imagesInitialState);
-  const [{ votes }, dispatchVotes] = useReducer(votesReducer, votesInitialState);
+  const {
+    state: {
+      favourites,
+      images,
+      votes,
+    },
+    dispatch,
+  } = useContext(store);
 
   useEffect(() => {
     async function fetchPageData() {
@@ -37,17 +37,17 @@ export const HomePage: React.FC = () => {
         const imagesData = await imagesResponse.json();
         const votesData = await votesResponse.json();
 
-        dispatchImages({
+        dispatch({
           type: 'SET_IMAGES',
           payload: imagesData,
         });
 
-        dispatchFavourites({
+        dispatch({
           type: 'SET_FAVOURITES',
           payload: favouritesData,
         });
 
-        dispatchVotes({
+        dispatch({
           type: 'SET_VOTES',
           payload: votesData,
         });
@@ -59,7 +59,7 @@ export const HomePage: React.FC = () => {
     }
 
     fetchPageData();
-  }, [addToast]);
+  }, [addToast, dispatch]);
 
   const onFavouriteImage = useCallback(async (imageId) => {
     try {
@@ -75,7 +75,7 @@ export const HomePage: React.FC = () => {
 
       const favourite = await response.json();
 
-      dispatchFavourites({
+      dispatch({
         type: 'ADD_FAVOURITE',
         payload: {
           image_id: imageId,
@@ -87,18 +87,14 @@ export const HomePage: React.FC = () => {
         appearance: 'error',
       });
     }
-  }, [addToast]);
+  }, [addToast, dispatch]);
 
   const onUnfavouriteImage = useCallback(async (imageId) => {
     try {
-      const favourite = favourites.find(({ image_id }) => image_id === imageId);
-
-      if (!favourite) {
-        throw new Error('Favourite could not be found');
-      }
+      const favourite = favourites.allFavourites.find(({ image_id }) => image_id === imageId);
 
       const response = await apiRequest(
-        `${apiSettings.baseURL}/favourites/${favourite.id}`,
+        `${apiSettings.baseURL}/favourites/${favourite!.id}`,
         {
           method: 'DELETE',
           body: JSON.stringify({
@@ -110,10 +106,10 @@ export const HomePage: React.FC = () => {
       const data = await response.json();
 
       if (data.message === 'SUCCESS') {
-        dispatchFavourites({
+        dispatch({
           type: 'REMOVE_FAVOURITE',
           payload: {
-            id: favourite.id,
+            id: favourite!.id,
           },
         });
       }
@@ -122,7 +118,7 @@ export const HomePage: React.FC = () => {
         appearance: 'error',
       });
     }
-  }, [favourites, addToast]);
+  }, [favourites, addToast, dispatch]);
 
   const onVote = useCallback(async (imageId: string, value: 1 | -1) => {
     const response = await apiRequest(
@@ -143,7 +139,7 @@ export const HomePage: React.FC = () => {
       const data = await response.json();
 
       if (data.message === 'SUCCESS') {
-        dispatchVotes({
+        dispatch({
           type: 'VOTE',
           payload: {
             imageId,
@@ -156,16 +152,16 @@ export const HomePage: React.FC = () => {
         appearance: 'error',
       });
     }
-  }, [addToast]);
+  }, [addToast, dispatch]);
 
   return (
     <Page>
       <h1>Uploaded images</h1>
       <UploadedImageList
         isLoading={isLoading}
-        images={images}
-        favourites={favourites}
-        votes={votes}
+        images={images.allImages}
+        favourites={favourites.allFavourites}
+        votes={votes.normalisedVotes}
         onFavourite={onFavouriteImage}
         onUnfavourite={onUnfavouriteImage}
         onVote={onVote}

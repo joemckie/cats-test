@@ -5,19 +5,22 @@ import { GlobalStyle } from './components/GlobalStyle/GlobalStyle';
 import { Routes } from './config/routes';
 import { HomePage } from './pages/home/HomePage';
 import { UploadPage } from './pages/upload/UploadPage';
+import { StoreProvider } from './store';
 
 export const App = () => (
-  <ToastProvider placement="bottom-right">
-    <Router>
-      <GlobalStyle />
-      <Switch>
-        <Route path={Routes.Upload}>
-          <UploadPage />
-        </Route>
-        <Route path={Routes.Home}>
-          <HomePage />
-        </Route>
-      </Switch>
-    </Router>
-  </ToastProvider>
+  <StoreProvider>
+    <ToastProvider placement="bottom-right">
+      <Router>
+        <GlobalStyle />
+        <Switch>
+          <Route path={Routes.Upload}>
+            <UploadPage />
+          </Route>
+          <Route path={Routes.Home}>
+            <HomePage />
+          </Route>
+        </Switch>
+      </Router>
+    </ToastProvider>
+  </StoreProvider>
 );
